@@ -34,12 +34,10 @@
    <main>
      <section class="card">
          <article>
-         <h2>Je hebt gekozen!</h2>
-         <h3>Persoon, 22 jaar oud</h3>
+         <h2><%= data.voornaam %></h2>
+             <p><%= data.leeftijd %> jaar oud</p>
          <article class="matchbuttons">
-         <form action="chatten.html">
-         <button id="datebutton" type="submit" disabled>Plan een bioscoop afspraak!</button><p>NAAM heeft jou nog niet geaccepteerd, tot die tijd kun je nog geen bioscoop afspraak plannen</p>
-         </form>
+     <button><a href="mailto:<%= data.email %>">Plan een afspraak!</a></button>
          </article>
          </article>
      </section>

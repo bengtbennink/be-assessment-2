@@ -1,5 +1,5 @@
+/* Gebruik gemaakt van de mysql-server example (credits naar Titus Wormer) */
 /* eslint-disable semi */
-
 var express = require('express')
 var bodyParser = require('body-parser')
 var multer = require('multer')
@@ -23,15 +23,15 @@ express()
   .use(bodyParser.urlencoded({extended: true}))
   .set('view engine', 'ejs')
   .set('views', 'view')
-  .get('/', movies)
+  .get('/', matches)
   .post('/', upload.single('cover'), add)
   .get('/add', form)
-  .get('/:id', movie)
+  .get('/:id', profiel)
   .delete('/:id', remove)
   .use(notFound)
   .listen(8000)
 
-function movies(req, res, next) {
+function matches(req, res, next) {
   connection.query('SELECT * FROM gebruikers', done)
 
   function done(err, data) {
@@ -43,7 +43,7 @@ function movies(req, res, next) {
   }
 }
 
-function movie(req, res, next) {
+function profiel(req, res, next) {
   var id = req.params.id
 
   connection.query('SELECT * FROM gebruikers WHERE id = ?', id, done)
