@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>BiosBuddy</title>
+</head>
+<body>
+   <header>
+    <h1>BiosBuddy</h1>
+       <nav>
+           <ul>
+                <li><a href="films.html">Films</a></li>
+                <li><a href="profiel.html">Mijn profiel</a></li>
+                <li><a href="matches.html">Mijn matches</a></li>
+                <li><a href="index.html">Uitloggen</a></li>
+           </ul>
+       </nav>
+   </header>
+   <section class="curtain">
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   </section>
+   
+   <main>
+<% for (var index = 0; index < data.length; index++) { %>
+     <section class="card">
+         <article>
+         <h2><%= data[index].voornaam %>, <%= data[index].leeftijd %></h2>
+           <aside class="profiel">
+            <button><a href="mailto:<%= data[index].email %>">Bekijk profiel</a></button>
+          </aside>
+         </article>
+       </section>
+       <% } %>
+   </main>
+    
+</body>
+</html>
