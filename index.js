@@ -5,6 +5,8 @@ var bodyParser = require('body-parser')
 var multer = require('multer')
 var mysql = require('mysql')
 var argon2 = require('argon2')
+var session = require('express-session')
+
 
 
 require('dotenv').config()
@@ -23,6 +25,11 @@ var upload = multer({dest: 'static/upload/'})
 express()
   .use(express.static('static'))
   .use(bodyParser.urlencoded({extended: true}))
+  .use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET
+  }))
   .set('view engine', 'ejs')
   .set('views', 'view')
   .get('/', matches)
@@ -37,6 +44,11 @@ express()
   .delete('/:id', remove)
   .use(notFound)
   .listen(8000)
+  
+
+
+
+
 
 function matches(req, res, next) {
   connection.query('SELECT * FROM gebruikers', done)
@@ -111,6 +123,7 @@ function onhash(hash) {
         next(err)
       } else {
         // Signed up!
+          req.session.user = {email: email}
         res.redirect('/')
       }
     }
@@ -180,12 +193,12 @@ function done(err, data) {
         .status(401)
         .send('Email adres bestaat niet')
     }
-
     
   }
 function onverify(match) {
       if (match) {
         // Logged in!
+       req.session.user = {email: email}
         res.redirect('/')
       } else {
         res.status(401).send('Wachtwoord is niet correct')
@@ -223,7 +236,11 @@ function profiel(req, res, next) {
 }
 
 function form(req, res) {
+    if (req.session.user) {
   res.render('add.ejs')
+} else {
+    res.status(401).send('Credentials required')
+  }
 }
 
 function add(req, res, next) {
