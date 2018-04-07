@@ -20,7 +20,7 @@ var connection = mysql.createConnection({
 
 connection.connect()
 
-var upload = multer({dest: 'static/upload/'})
+var upload = multer({dest: 'static/images/'})
 
 express()
   .use(express.static('static'))
@@ -32,23 +32,42 @@ express()
   }))
   .set('view engine', 'ejs')
   .set('views', 'view')
-  .get('/', matches)
-  .post('/', upload.single('cover'), add)
-  .get('/add', form)
+
+  .get('/matches', matches)
+  .get('/', home)
+  .get('/admin', form)
   .get('/mijnprofiel', mijnprofiel)
   .get('/login', loginform)
- .post('/login', login)
-  .get('/registreren', registreerform)
-  .post('/registreren', registreren)
   .get('/:id', profiel)
-  .delete('/:id', remove)
+  .get('/films', films)
+  .get('/registreren', registreerform)
+  .get('/verwijderfilm=:id', verwijderfilm)
+
+  .post('/', upload.single('afbeelding'), add)
+  .post('/login', login)
+  .post('/registreren', registreren)
+
   .use(notFound)
   .listen(8000)
   
 
 
 
+function home(req, res) {
+      res.render('index.ejs')
+    }
 
+function films(req, res, next) {
+  connection.query('SELECT * FROM films', done)
+
+  function done(err, data) {
+    if (err) {
+      next(err)
+    } else {
+      res.render('films.ejs', {data: data})
+    }
+  }
+}
 
 function matches(req, res, next) {
   connection.query('SELECT * FROM gebruikers', done)
@@ -70,6 +89,7 @@ function registreren(req, res, next) {
   var geslacht = req.body.geslacht
   var leeftijd = req.body.leeftijd
   var voornaam = req.body.voornaam
+  var quote = req.body.quote
   var bios = req.body.bios
   var min = 8
   var max = 160
@@ -115,6 +135,7 @@ function onhash(hash) {
       geslacht: geslacht,
       leeftijd: leeftijd,
       voornaam: voornaam,
+      quote: quote,
       bios: bios
     }, oninsert)
     
@@ -123,7 +144,7 @@ function onhash(hash) {
         next(err)
       } else {
         // Signed up!
-          req.session.user = {email: email}
+          req.session.user = {username: email}
         res.redirect('/')
       }
     }
@@ -162,62 +183,56 @@ function loginform(req, res, next) {
   }
 }
 
+
 function login(req, res, next) {
-  var email = req.body.email
-  var password = req.body.password
+  var username = req.body.email;
+  var password = req.body.password;
 
-  if (!email || !password) {
-    res
-      .status(400)
-      .send('Username or password are missing')
+  if (!username || !password) {
+    res.status(400).send("Username or password are missing");
 
-    return
+    return;
   }
 
-  connection.query(
-    'SELECT * FROM gebruikers WHERE email = ?',
-    email,
-    done
-  )
-function done(err, data) {
-    var user = data && data[0]
+  getLoggedInUser(username, done);     // GetLoggedInUser mogelijk gemaakt door Jona Meijers & Marijn Moviat - Cre
 
+  function done(err, user) {
     if (err) {
-      next(err)
+      next(err);
     } else if (user) {
-      argon2
-        .verify(user.hash, password)
-        .then(onverify, next)
+      argon2.verify(user.hash, password).then(onverify, next);
     } else {
-      res
-        .status(401)
-        .send('Email adres bestaat niet')
+      res.status(401).send('Email adres bestaat niet')
     }
-    
-  }
-function onverify(match) {
+
+    function onverify(match) {
       if (match) {
+        req.session.user = {
+          username: user.username
+        };
         // Logged in!
-       req.session.user = {email: email}
-        res.redirect('/')
+        res.redirect("/films");
       } else {
-        res.status(401).send('Wachtwoord is niet correct')
+        res.status(401).send("Wachtwoord is niet correct");
       }
-    } }
-
-
-
-function mijnprofiel(req, res, next) {
-  connection.query('SELECT * FROM gebruikers', done)
-
-  function done(err, data) {
-    if (err) {
-      next(err)
-    } else {
-      res.render('profiel.ejs', {data: data})
     }
   }
 }
+
+function mijnprofiel(req, res, next) {
+  getLoggedInUser(req.session.user.username, onget) // Credits to Jona Meijers & Marijn Moviat
+
+  function onget(err, user) {
+    if (err) {
+      next(err);
+    } else {
+      res.render("profiel.ejs", {
+        user //adding the user to the session to show right profile
+      });
+    }
+  }
+}
+
 
 function profiel(req, res, next) {
   var id = req.params.id
@@ -236,40 +251,54 @@ function profiel(req, res, next) {
 }
 
 function form(req, res) {
-    if (req.session.user) {
-  res.render('add.ejs')
-} else {
-    res.status(401).send('Credentials required')
-  }
-}
-
-function add(req, res, next) {
-  connection.query('INSERT INTO movies SET ?', {
-    cover: req.file ? req.file.filename : null,
-    title: req.body.title,
-    plot: req.body.plot,
-    description: req.body.description
-  }, done)
-
-  function done(err, data) {
-    if (err) {
-      next(err)
-    } else {
-      res.redirect('/' + data.insertId)
+    connection.query('SELECT * FROM films', done)
+    
+    
+      function done(err, data) {
+      res.render('admin.ejs', {data: data})
     }
   }
-}
+    
+    
 
-function remove(req, res, next) {
-  var id = req.params.id
-
-  connection.query('DELETE FROM movies WHERE id = ?', id, done)
+function add(req, res, next) {
+  connection.query('INSERT INTO films SET ?', {
+    image: req.file ? req.file.filename : null,
+    titel: req.body.title,
+    beschrijving: req.body.description
+  }, done)
 
   function done(err) {
     if (err) {
       next(err)
     } else {
-      res.json({status: 'ok'})
+      res.redirect('back');
+    }
+  }
+}
+
+function verwijderfilm(req, res, next) {
+  var id = req.params.id
+
+  connection.query('DELETE FROM films WHERE id = ?', id, done)
+
+  function done(err) {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('back');
+    }
+  }
+}
+
+function getLoggedInUser(email, cb) {
+  connection.query('SELECT * FROM gebruikers WHERE email = ?', email, done)
+
+  function done(err, user) {
+    if (err) {
+      cb(err, null)
+    } else {
+      cb(null, user[0])
     }
   }
 }
