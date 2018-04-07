@@ -219,16 +219,14 @@ function login(req, res, next) {
   }
 }
 
-function mijnprofiel(req, res, next) {
-  getLoggedInUser(req.session.user.username, onget) // Credits to Jona Meijers & Marijn Moviat
-
+function mijnprofiel(req, res, next) { // Credits to Jona Meijers & Marijn Moviat
+  getLoggedInUser(req.session.user.id, onget) 
+      
   function onget(err, user) {
     if (err) {
       next(err);
     } else {
-      res.render("profiel.ejs", {
-        user //adding the user to the session to show right profile
-      });
+      res.render("profiel.ejs", user);
     }
   }
 }
@@ -291,8 +289,8 @@ function verwijderfilm(req, res, next) {
   }
 }
 
-function getLoggedInUser(email, cb) {
-  connection.query('SELECT * FROM gebruikers WHERE email = ?', email, done)
+function getLoggedInUser(username, cb) {
+  connection.query('SELECT * FROM gebruikers WHERE email = ?', username, done)
 
   function done(err, user) {
     if (err) {
