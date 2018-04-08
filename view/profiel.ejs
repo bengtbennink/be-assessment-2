@@ -37,10 +37,13 @@
 
         <section class="card">
             <article>
-               <h2><%= data[0].voornaam %></h2>
+                <h2>
+                    <%= data[0].voornaam %>
+                </h2>
                 <p><img src="images/profielfoto/<%= data[0].profielfoto %>" class="profielfoto"></p>
                 <p><i><%= data[0].leeftijd %> jaar oud</i></p>
-                <p class="filmquote">"<%= data[0].quote %>"</p>
+                <p class="filmquote">"
+                    <%= data[0].quote %>"</p>
             </article>
         </section>
         <section class="card">
@@ -51,9 +54,9 @@
                     <p><input type="text" maxlength="50" placeholder="" name="quote"></p>
                     <button>Update</button>
                 </form>
-                
+
                 <hr>
-                
+
                 <p>Upload een profielfoto</p>
                 <form action=/profielfoto method=post enctype=multipart/form-data>
                     <p><input name="profielfoto" type="file" accept="image/*"></p>
@@ -67,4 +70,5 @@
 
 
 </body>
+
 </html>
