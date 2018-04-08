@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME
-})
+});
 
 connection.connect()
 
@@ -185,16 +185,16 @@ function loginform(req, res, next) {
 
 
 function login(req, res, next) {
-  var username = req.body.email;
+  var email = req.body.email;
   var password = req.body.password;
 
-  if (!username || !password) {
+  if (!email || !password) {
     res.status(400).send("Username or password are missing");
 
     return;
   }
 
-  getLoggedInUser(username, done);     // GetLoggedInUser mogelijk gemaakt door Jona Meijers & Marijn Moviat - Cre
+  getLoggedInUser(email, done);     // GetLoggedInUser mogelijk gemaakt door Jona Meijers & Marijn Moviat - Cre
 
   function done(err, user) {
     if (err) {
@@ -208,7 +208,7 @@ function login(req, res, next) {
     function onverify(match) {
       if (match) {
         req.session.user = {
-          username: user.username
+          email: user.email
         };
         // Logged in!
         res.redirect("/films");
@@ -219,17 +219,22 @@ function login(req, res, next) {
   }
 }
 
-function mijnprofiel(req, res, next) { // Credits to Jona Meijers & Marijn Moviat
-  getLoggedInUser(req.session.user.id, onget) 
-      
-  function onget(err, user) {
-    if (err) {
-      next(err);
-    } else {
-      res.render("profiel.ejs", user);
-    }
-  }
+function mijnprofiel(req, res) {
+
+
+        var email = req.session.user
+        connection.query('SELECT * FROM gebruikers WHERE email = ?', email, done) 
+
+        function done(err, data) {
+            res.render('profiel.ejs', {
+                data: data
+            })
+        }
 }
+
+
+
+
 
 
 function profiel(req, res, next) {
@@ -289,8 +294,8 @@ function verwijderfilm(req, res, next) {
   }
 }
 
-function getLoggedInUser(username, cb) {
-  connection.query('SELECT * FROM gebruikers WHERE email = ?', username, done)
+function getLoggedInUser(email, cb) {
+  connection.query('SELECT * FROM gebruikers WHERE email = ?', email, done)
 
   function done(err, user) {
     if (err) {

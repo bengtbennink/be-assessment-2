@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>BiosBuddy</title>
+</head>
+<body>
+   <header>
+    <h1>BiosBuddy</h1>
+       <nav>
+           <ul>
+                 <li><a href="films">Films</a></li>
+                <li><a href="mijnprofiel">Mijn profiel</a></li>   
+                <li><a href="/">Uitloggen</a></li>
+           </ul>
+       </nav>
+   </header>
+   <section class="curtain">
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   <div class="halfCircleBottom"></div>
+   </section>
+   
+   <main>
+
+     <section class="card">
+         <article>
+             <h2>Mijn profiel</h2>
+             <p>Naam: <%= data.email %> </p>
+             <p>leeftijd:</p>
+             <p>Favoriete film quote:</p>
+         </article>
+     </section>
+     <section class="card">
+         <article>
+         <h2>Pas aan</h2>
+             <p>Favoriete film quote:</p>
+             <form>
+                 <textarea name="quote" placeholder="..." rows="1"></textarea>
+             </form>
+             <form>
+             <button id="likebutton" type="submit">Update</button>
+       </form>
+         </article>
+        
+
+     </section>
+   </main>
+
+    
+</body>
+</html>
