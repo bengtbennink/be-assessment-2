@@ -11,10 +11,10 @@
     <h1>BiosBuddy</h1>
        <nav>
            <ul>
-                <li><a href="films.html">Films</a></li>
-                <li><a href="profiel.html">Mijn profiel</a></li>
-                <li><a href="matches.html">Mijn matches</a></li>
-                <li><a href="index.html">Uitloggen</a></li>
+                 <li><a href="films">Films</a></li>
+                <li><a href="/mijnprofiel">Mijn profiel</a></li>
+                <li><a href="/">Uitloggen</a></li>
+                <li><a href="/admin">Admin paneel</a></li>
            </ul>
        </nav>
    </header>
@@ -32,15 +32,18 @@
    </section>
    
    <main>
-<% for (var index = 0; index < data.length; index++) { %>
-     <section class="card">
-         <article>
-         <h2><%= data[index].voornaam %>, <%= data[index].leeftijd %></h2>
-           <aside class="profiel">
-            <button><a href="/<%= data[index].id %>">Bekijk profiel</a></button>
-          </aside>
+   <h1>Deze buddy's vinden dezelfde film leuk</h1>
+       <% for (var index = 0; index < data.length; index++) { %>
+          <section class="card">
+            <article>
+             <h2><%= data[index].voornaam %></h2>
+              <p><img src="images/profielfoto/<%= data[index].profielfoto %>" class="profielfoto"></p>
+               <p><i><%= data[index].leeftijd %> jaar oud</i></p>
+            <aside class="profiel">
+               <button><a href="/<%= data[index].id %>">Bekijk profiel</a></button>
+            </aside>
          </article>
-       </section>
+          </section>
        <% } %>
    </main>
     

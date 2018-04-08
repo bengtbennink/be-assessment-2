@@ -52,8 +52,19 @@ li {
     padding-bottom: 20px;
 }
 
+.profielfoto {
+    width: 50%;
+    border-radius: 50%;
+}
+
+.filmquote {
+    font-family: NexaLight;
+    font-size: 1.5em;
+}
+
+
 .card {
-    background-color: 	#E8E8E8;
+    background-color: 	#f9f9f9;
     padding: 20px;
     border-style: solid;
     border-color: #800000;
@@ -63,19 +74,21 @@ li {
     border-width: thick;
     border-radius: 2%;
     margin-bottom: 20px;
+     text-align: center;
+}
 }
 
 */* Form validation */*
 
   input:focus:invalid {
-    background-image: url(../img/invalid.png);
+    background-image: url(images/invalid.png);
     background-position: right top;
     background-repeat: no-repeat;
   }
   input:required:valid {
-    background-image: url(../img/checkmark.png);
+    background-image: url(images/checkmark.png);
     background-position: right;
-    background-size: 25px 25px;
+    background-size: 20px 20px;
     background-repeat: no-repeat;
   }
 

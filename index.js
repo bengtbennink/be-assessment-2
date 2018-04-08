@@ -21,6 +21,7 @@ var connection = mysql.createConnection({
 connection.connect()
 
 var upload = multer({dest: 'static/images/'})
+var profielfotoupload = multer({dest: 'static/images/profielfoto/'})
 
 express()
   .use(express.static('static'))
@@ -44,7 +45,9 @@ express()
   .get('/verwijderfilm=:id', verwijderfilm)
 
   .post('/', upload.single('afbeelding'), add)
+  .post('/profielfoto', profielfotoupload.single('profielfoto'), uploadprofiel)
   .post('/login', login)
+  .post('/updatequote', updatequote)
   .post('/registreren', registreren)
 
   .use(notFound)
@@ -53,9 +56,17 @@ express()
 
 
 
-function home(req, res) {
-      res.render('index.ejs')
+function home(req, res, next) {
+  connection.query('SELECT * FROM gebruikers', done)
+
+  function done(err, data) {
+    if (err) {
+      next(err)
+    } else {
+      res.render('index.ejs', {data: data})
     }
+  }
+}
 
 function films(req, res, next) {
   connection.query('SELECT * FROM films', done)
@@ -136,7 +147,7 @@ function onhash(hash) {
       leeftijd: leeftijd,
       voornaam: voornaam,
       quote: quote,
-      profielfoto: "4e607a6702f7b6e116f69ea2b250c5f4",
+      profielfoto: "20031290b1722237a20e320ef5786dd1",
       bios: bios
     }, oninsert)
     
@@ -146,7 +157,7 @@ function onhash(hash) {
       } else {
         // Signed up!
           req.session.user = {username: email}
-        res.redirect('/')
+        res.redirect('/login')
       }
     }
   }
@@ -220,13 +231,17 @@ function login(req, res, next) {
   }
 }
 
-function mijnprofiel(req, res) {
+function mijnprofiel(req, res) {  // thanks for the help on this one Jim van de Velde 
+    if (req.session.user) {
         var email = req.session.user.email
-        connection.query('SELECT * FROM gebruikers WHERE email = ?', email, done) 
+        connection.query('SELECT * FROM gebruikers WHERE email = ?', email, done)
         function done(err, data) {
             res.render('profiel.ejs', {
                 data: data
             })
+        }
+        } else {
+            res.redirect("/login");
         }
 }
 
@@ -252,16 +267,48 @@ function profiel(req, res, next) {
 }
 
 function admin(req, res) {
-     var email = req.session.user.email
-    connection.query('SELECT * FROM films', email, done)
     
-    
+    if (req.session.user) {
+       var email = req.session.user.email
+       connection.query('SELECT * FROM films', email, done)
+
       function done(err, data) {
       res.render('admin.ejs', {data: data})
+      }
+    } else {
+         res.redirect("/login");
+    }
+        
+        
+  }
+
+function updatequote(req, res, next) { // updates the favoriete film quote
+    var email = req.session.user.email
+    connection.query('UPDATE gebruikers SET ? WHERE email = ?', [{quote: req.body.quote}, email], done)
+
+  function done(err) {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('back');
     }
   }
+}
     
+function uploadprofiel(req, res, next) { // uploads the new profile picture to images/profielfoto and inserts it to the right user in the database
+    var email = req.session.user.email
+    connection.query('UPDATE gebruikers SET ? WHERE email = ?', [{profielfoto: req.file ? req.file.filename : null }, email], done)
+
+  function done(err) {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect('back');
+    }
+  }
+}
     
+
 
 function add(req, res, next) {
   connection.query('INSERT INTO films SET ?', {

@@ -14,6 +14,7 @@
                 <li><a href="films">Films</a></li>
                 <li><a href="mijnprofiel">Mijn profiel</a></li>
                 <li><a href="/">Uitloggen</a></li>
+                <li><a href="/admin">Admin paneel</a></li>
            </ul>
        </nav>
    </header>
@@ -33,12 +34,12 @@
    <main>
      <section class="card">
          <article>
-         <h2><%= data.voornaam %></h2>
-            <p><img src="images/<%= data.profielfoto %>" class="profielfoto"></p>
+           <h2><%= data.voornaam %></h2>
+            <p><img src="images/profielfoto/<%= data.profielfoto %>" class="profielfoto"></p>
              <p><%= data.leeftijd %> jaar oud</p>
-             <p>Favoriete filmquote: <i><%= data.quote %></i></p>
+             <p class="filmquote">"<%= data.quote %>"</p>
          <article class="matchbuttons">
-     <button><a href="mailto:<%= data.email %>">Plan een afspraak!</a></button>
+     <button><a href="mailto:<%= data.email %>">Stuur een bericht</a></button>
          </article>
          </article>
      </section>

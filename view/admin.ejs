@@ -17,6 +17,7 @@
                 <li><a href="films">Films</a></li>
                 <li><a href="mijnprofiel">Mijn profiel</a></li>
                 <li><a href="/">Uitloggen</a></li>
+                <li><a href="/admin">Admin paneel</a></li>
             </ul>
         </nav>
     </header>
@@ -33,13 +34,13 @@
         <div class="halfCircleBottom"></div>
     </section>
 
-    <main>
+    <main><h1>In dit prototype is het admin paneel nog niet beveiligd</h1>
         <section class="card">
             <article>
                 <h2>Voeg een film toe</h2>
                 <form action=/ method=post enctype=multipart/form-data>
-                    <p><label>Title <input name=title></label></p>
-                    <p><label>Afbeelding<input name=afbeelding type=file accept=image/*></label></p>
+                    <p><label>Title <input name=title required></label></p>
+                    <p><label>Afbeelding <input name=afbeelding type=file accept=image/*></label></p>
                     <p><label>Beschrijving<textarea name=description rows=5></textarea></label></p>
                     <button>Voeg toe</button>
                 </form>
@@ -56,9 +57,7 @@
                     <% } %>
             </article>
         </section>
-        
     </main>
 
 </body>
 </html>
-
