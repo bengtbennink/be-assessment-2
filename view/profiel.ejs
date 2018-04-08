@@ -35,9 +35,9 @@
      <section class="card">
          <article>
              <h2>Mijn profiel</h2>
-             <p>Naam: <%= data.email %> </p>
-             <p>leeftijd:</p>
-             <p>Favoriete film quote:</p>
+             <p>Naam:  <%= data[0].voornaam %></p>
+             <p>leeftijd: <%= data[0].leeftijd %></p>
+             <p>Favoriete film quote: <%= data[0].quote %></p>
          </article>
      </section>
      <section class="card">
@@ -45,7 +45,7 @@
          <h2>Pas aan</h2>
              <p>Favoriete film quote:</p>
              <form>
-                 <textarea name="quote" placeholder="..." rows="1"></textarea>
+                 <textarea name="quote" placeholder="<%= data[0].quote %>" rows="1"></textarea>
              </form>
              <form>
              <button id="likebutton" type="submit">Update</button>

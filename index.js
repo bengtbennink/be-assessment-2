@@ -35,7 +35,7 @@ express()
 
   .get('/matches', matches)
   .get('/', home)
-  .get('/admin', form)
+  .get('/admin', admin)
   .get('/mijnprofiel', mijnprofiel)
   .get('/login', loginform)
   .get('/:id', profiel)
@@ -220,11 +220,8 @@ function login(req, res, next) {
 }
 
 function mijnprofiel(req, res) {
-
-
-        var email = req.session.user
+        var email = req.session.user.email
         connection.query('SELECT * FROM gebruikers WHERE email = ?', email, done) 
-
         function done(err, data) {
             res.render('profiel.ejs', {
                 data: data
@@ -253,8 +250,9 @@ function profiel(req, res, next) {
   }
 }
 
-function form(req, res) {
-    connection.query('SELECT * FROM films', done)
+function admin(req, res) {
+     var email = req.session.user.email
+    connection.query(('SELECT * FROM films'),('SELECT rang FROM gebruikers WHERE email = ?', email, done))
     
     
       function done(err, data) {
