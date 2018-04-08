@@ -45,6 +45,7 @@ express()
     .get('/admin', admin)
     .get('/mijnprofiel', mijnprofiel)
     .get('/login', loginform)
+    .get('/loguit', loguit)
     .get('/:id', profiel)
     .get('/films', films)
     .get('/registreren', registreerform)
@@ -249,6 +250,17 @@ function login(req, res, next) {
         }
     }
 }
+
+function loguit(req, res, next) {
+  req.session.destroy(function (err) {
+    if (err) {
+      next(err)
+    } else {
+      res.redirect("/")
+    }
+  })
+}
+
 
 function mijnprofiel(req, res) { // thanks for the help on this one Jim van de Velde 
     if (req.session.user) {
