@@ -136,6 +136,7 @@ function onhash(hash) {
       leeftijd: leeftijd,
       voornaam: voornaam,
       quote: quote,
+      profielfoto: "4e607a6702f7b6e116f69ea2b250c5f4",
       bios: bios
     }, oninsert)
     
@@ -252,7 +253,7 @@ function profiel(req, res, next) {
 
 function admin(req, res) {
      var email = req.session.user.email
-    connection.query(('SELECT * FROM films'),('SELECT rang FROM gebruikers WHERE email = ?', email, done))
+    connection.query('SELECT * FROM films', email, done)
     
     
       function done(err, data) {

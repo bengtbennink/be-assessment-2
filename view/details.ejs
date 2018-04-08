@@ -11,10 +11,9 @@
     <h1>BiosBuddy</h1>
        <nav>
            <ul>
-                <li><a href="films.html">Films</a></li>
-                <li><a href="profiel.html">Mijn profiel</a></li>
-                <li><a href="matches.html">Mijn matches</a></li>
-                <li><a href="index.html">Uitloggen</a></li>
+                <li><a href="films">Films</a></li>
+                <li><a href="mijnprofiel">Mijn profiel</a></li>
+                <li><a href="/">Uitloggen</a></li>
            </ul>
        </nav>
    </header>
@@ -35,7 +34,9 @@
      <section class="card">
          <article>
          <h2><%= data.voornaam %></h2>
+            <p><img src="images/<%= data.profielfoto %>" class="profielfoto"></p>
              <p><%= data.leeftijd %> jaar oud</p>
+             <p>Favoriete filmquote: <i><%= data.quote %></i></p>
          <article class="matchbuttons">
      <button><a href="mailto:<%= data.email %>">Plan een afspraak!</a></button>
          </article>
